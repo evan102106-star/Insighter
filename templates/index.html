@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 style="color:red;">🚨 Insider Threat Console</h1>
+
+<!-- 🔍 SEARCH -->
+
+<h2>🔍 Search User</h2>
+
+<form method="POST" action="/search" style="margin-bottom:20px;">
+    <input type="text" name="username" placeholder="Enter username" required
+           style="padding:8px; width:220px; border-radius:5px; border:1px solid #ccc;">
+    <button type="submit" style="padding:8px 12px; border:none; background:#007bff; color:white; border-radius:5px;">
+        Search
+    </button>
+</form>
+
+<!-- 🚨 SUSPICIOUS USERS -->
+
+<h2 style="color:red;">🚨 Suspicious Users</h2>
+
+{% if suspicious and suspicious|length > 0 %}
+
+<table style="border:2px solid red; border-collapse:collapse; width:100%;">
+    <tr style="background:#ffcccc;">
+        <th style="padding:10px;">User</th>
+        <th style="padding:10px;">Login Time</th>
+        <th style="padding:10px;">Risk Score</th>
+        <th style="padding:10px;">Action</th>
+    </tr>
+
+```
+{% for s in suspicious %}
+<tr style="background:#ffe6e6;">
+    <td style="padding:10px;">{{ s.username }}</td>
+    <td style="padding:10px;">{{ s.login_time }}</td>
+    <td style="padding:10px;">
+        <span style="color:red; font-weight:bold;">
+            {{ s.risk_score }}
+        </span>
+    </td>
+    <td style="padding:10px;">
+        <a href="/user/{{ s.username }}" style="text-decoration:none; color:#007bff;">
+            🔍 Investigate
+        </a>
+    </td>
+</tr>
+{% endfor %}
+```
+
+</table>
+
+{% else %}
+
+<p style="color:green; font-weight:bold;">✅ No suspicious users detected</p>
+
+{% endif %}
+
+{% endblock %}

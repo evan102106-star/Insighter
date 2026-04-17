@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>🔍 User Investigation: {{ username }}</h1>
+
+<!-- 🔐 Sessions -->
+
+<h2>Sessions</h2>
+<table>
+<tr>
+<th>Login</th>
+<th>Logout</th>
+</tr>
+
+{% for s in sessions %}
+
+<tr>
+<td>{{ s.login_time }}</td>
+<td>{{ s.logout_time }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- 📁 Files -->
+
+<h2>File Activity</h2>
+<table>
+<tr>
+<th>File</th>
+<th>Action</th>
+<th>Time</th>
+</tr>
+
+{% for f in files %}
+
+<tr>
+<td>{{ f.file_path }}</td>
+<td>{{ f.event_type }}</td>
+<td>{{ f.timestamp }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- 🌐 Network -->
+
+<h2>Network</h2>
+<table>
+<tr>
+<th>Sent</th>
+<th>Received</th>
+<th>Connections</th>
+</tr>
+
+{% for n in network %}
+
+<tr>
+<td>{{ n.bytes_sent }}</td>
+<td>{{ n.bytes_received }}</td>
+<td>{{ n.connections }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- 🔌 USB -->
+
+<h2>USB Usage</h2>
+<table>
+<tr>
+<th>Device</th>
+<th>Duration</th>
+</tr>
+
+{% for u in usb %}
+
+<tr>
+<td>{{ u.device_name }}</td>
+<td>{{ u.duration }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- 🖥️ Apps -->
+
+<h2>Applications</h2>
+<table>
+<tr>
+<th>App</th>
+<th>Usage Time</th>
+</tr>
+
+{% for a in apps %}
+
+<tr>
+<td>{{ a.app_name }}</td>
+<td>{{ a.usage_time }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<a href="/">⬅ Back</a>
+
+{% endblock %}
