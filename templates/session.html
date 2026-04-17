@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1 style="color:#b30000;">🧠 Session Investigation</h1>
+
+<!-- SESSION INFO -->
+<div style="padding:15px; border:1px solid #ddd; border-radius:8px;">
+
+    <h3>👤 User: {{ session.username }}</h3>
+    <p><b>Session ID:</b> {{ session.id }}</p>
+    <p><b>System:</b> {{ session.system_id }}</p>
+    <p><b>Login:</b> {{ session.login_time }}</p>
+    <p><b>Logout:</b> {{ session.logout_time if session.logout_time else "Active" }}</p>
+
+</div>
+
+<hr>
+
+<h2>📊 Activity Timeline</h2>
+
+<div style="border-left:3px solid red; padding-left:15px;">
+
+    <!-- FILES -->
+    <h3>📁 Files</h3>
+    {% for f in files %}
+        <p>{{ f.event_type }} → {{ f.file_path }}</p>
+    {% endfor %}
+
+    <!-- NETWORK -->
+    <h3>🌐 Network</h3>
+    {% for n in network %}
+        <p>Sent: {{ n.bytes_sent }} | Received: {{ n.bytes_received }}</p>
+    {% endfor %}
+
+    <!-- USB -->
+    <h3>🔌 USB</h3>
+    {% for u in usb %}
+        <p>{{ u.device_name }} ({{ u.start_time }} → {{ u.end_time }})</p>
+    {% endfor %}
+
+    <!-- APPS -->
+    <h3>🧩 Apps</h3>
+    {% for a in apps %}
+        <p>{{ a.app_name }} → {{ a.usage_time }} sec</p>
+    {% endfor %}
+
+</div>
+
+<hr>
+
+<!-- THREAT SUMMARY -->
+<h2 style="color:red;">🚨 Threat Summary</h2>
+
+<div style="background:#ffe6e6; padding:15px; border-radius:8px;">
+
+    {% if files|length > 20 %}
+        <p>📁 High file activity detected</p>
+    {% endif %}
+
+    {% if network|length > 10 %}
+        <p>🌐 High network usage detected</p>
+    {% endif %}
+
+    {% if usb|length > 0 %}
+        <p>🔌 USB activity detected</p>
+    {% endif %}
+
+    {% if apps|length == 0 and files|length == 0 %}
+        <p style="color:green;">No threats detected</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

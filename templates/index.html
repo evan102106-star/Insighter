@@ -2,59 +2,77 @@
 
 {% block content %}
 
-<h1 style="color:red;">🚨 Insider Threat Console</h1>
+<h1 style="color:#b30000;">🚨 Insider Threat Console</h1>
 
-<!-- 🔍 SEARCH -->
-
-<h2>🔍 Search User</h2>
+<!-- SEARCH -->
+<h2>🔍 Search Session</h2>
 
 <form method="POST" action="/search" style="margin-bottom:20px;">
-    <input type="text" name="username" placeholder="Enter username" required
-           style="padding:8px; width:220px; border-radius:5px; border:1px solid #ccc;">
-    <button type="submit" style="padding:8px 12px; border:none; background:#007bff; color:white; border-radius:5px;">
+    <input type="text" name="query" placeholder="Enter Session ID"
+        style="padding:10px; width:250px; border-radius:6px; border:1px solid #ccc;">
+    
+    <button type="submit"
+        style="padding:10px 15px; background:#007bff; color:white; border:none; border-radius:6px;">
         Search
     </button>
 </form>
 
-<!-- 🚨 SUSPICIOUS USERS -->
+<hr>
 
-<h2 style="color:red;">🚨 Suspicious Users</h2>
+<!-- SUSPICIOUS TABLE -->
+<h2 style="color:#b30000;">🚨 Suspicious Sessions</h2>
 
 {% if suspicious and suspicious|length > 0 %}
 
-<table style="border:2px solid red; border-collapse:collapse; width:100%;">
-    <tr style="background:#ffcccc;">
-        <th style="padding:10px;">User</th>
-        <th style="padding:10px;">Login Time</th>
-        <th style="padding:10px;">Risk Score</th>
-        <th style="padding:10px;">Action</th>
+<table style="width:100%; border-collapse:collapse;">
+
+    <tr style="background:#ffe5e5;">
+        <th>Session</th>
+        <th>User</th>
+        <th>Login Hour</th>
+        <th>Risk</th>
+        <th>ML</th>
+        <th>Score</th>
+        <th>Action</th>
+        <th>View</th>
     </tr>
 
-```
-{% for s in suspicious %}
-<tr style="background:#ffe6e6;">
-    <td style="padding:10px;">{{ s.username }}</td>
-    <td style="padding:10px;">{{ s.login_time }}</td>
-    <td style="padding:10px;">
-        <span style="color:red; font-weight:bold;">
+    {% for s in suspicious %}
+    <tr style="border-bottom:1px solid #ddd;">
+
+        <td>{{ s.session_id }}</td>
+        <td>{{ s.username }}</td>
+        <td>{{ s.login_hour }}</td>
+
+        <td style="color:red; font-weight:bold;">
             {{ s.risk_score }}
-        </span>
-    </td>
-    <td style="padding:10px;">
-        <a href="/user/{{ s.username }}" style="text-decoration:none; color:#007bff;">
-             Investigate
-        </a>
-    </td>
-</tr>
-{% endfor %}
-```
+        </td>
+
+        <td>
+            {% if s.ml_label == "ANOMALY" %}
+                <span style="color:red;">ANOMALY</span>
+            {% else %}
+                <span style="color:green;">NORMAL</span>
+            {% endif %}
+        </td>
+
+        <td>{{ "%.4f"|format(s.ml_score) }}</td>
+
+        <td style="font-weight:bold;">{{ s.action }}</td>
+
+        <td>
+            <a href="/session/{{ s.session_id }}" style="color:#007bff;">
+                Investigate
+            </a>
+        </td>
+
+    </tr>
+    {% endfor %}
 
 </table>
 
 {% else %}
-
-<p style="color:green; font-weight:bold;">✅ No suspicious users detected</p>
-
+<p style="color:green;">No anomalies detected</p>
 {% endif %}
 
 {% endblock %}
