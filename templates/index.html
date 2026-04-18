@@ -4,14 +4,13 @@
 
 <!-- ================= HEADER ================= -->
 <div class="card">
-    <h2>📊 Live Session Monitoring</h2>
+    <h2> Live Session Monitoring</h2>
     <p>Real-time ML-based insider threat detection</p>
 </div>
 
 <!-- ================= SEARCH ================= -->
-<!-- ================= SEARCH ================= -->
 <div class="card">
-    <div class="section-title">🔍 Search Session</div>
+    <div class="section-title"> Search Session</div>
 
     <form onsubmit="searchSessions(event)">
         <div class="search-bar">
@@ -20,15 +19,15 @@
         </div>
     </form>
 
-    <!-- Quick filters -->
     <div style="margin-top:10px;">
         <button onclick="quickFilter('anomaly')">⚠ Only Anomalies</button>
         <button onclick="quickFilter('')">All</button>
     </div>
 </div>
+
 <!-- ================= LIVE TABLE ================= -->
 <div class="card">
-    <div class="section-title">🧠 Recent Sessions (Live)</div>
+    <div class="section-title"> Recent Sessions (Live)</div>
 
     <table id="sessionTable">
         <thead>
@@ -64,18 +63,17 @@ async function loadSessions() {
         console.log("Error loading sessions:", err);
     }
 }
+
 async function searchSessions(e) {
     e.preventDefault();
 
     let query = document.getElementById("searchInput").value.trim();
 
-    // ✅ If session ID → redirect to user page
     if (!isNaN(query) && query !== "") {
         window.location.href = `/session/${query}`;
         return;
     }
 
-    // Otherwise → AJAX search
     try {
         let res = await fetch("/search", {
             method: "POST",
@@ -92,6 +90,7 @@ async function searchSessions(e) {
         console.log("Search error:", err);
     }
 }
+
 function quickFilter(type) {
     document.getElementById("searchInput").value = type;
     searchSessions(new Event("submit"));
@@ -107,7 +106,6 @@ function renderTable(data) {
         return;
     }
 
-    // Sort by highest risk
     data.sort((a, b) => b.risk_score - a.risk_score);
 
     data.forEach(s => {
@@ -118,8 +116,11 @@ function renderTable(data) {
 
         let statusClass = s.ml_label === "ANOMALY" ? "status-anomaly" : "status-normal";
 
+        // 🔥 NEW: anomaly row highlight
+        let rowClass = s.ml_label === "ANOMALY" ? "row-anomaly" : "";
+
         let row = `
-            <tr>
+            <tr class="${rowClass}">
                 <td><strong>${s.session_id}</strong></td>
                 <td>${s.login_hour}</td>
 
@@ -140,7 +141,7 @@ function renderTable(data) {
                 </td>
 
                 <td>
-                    <a href="/session/${s.session_id}">View</a>
+                    <a href="/session/${s.session_id}" class="view-btn">View</a>
                 </td>
             </tr>
         `;
@@ -149,9 +150,9 @@ function renderTable(data) {
     });
 }
 
-// Live auto refresh
 setInterval(loadSessions, 5000);
 loadSessions();
 
 </script>
+
 {% endblock %}

@@ -1,16 +1,16 @@
 /* ================= GLOBAL ================= */
 body {
     background:
-        radial-gradient(circle at 20% 20%, rgba(0,255,255,0.05), transparent),
-        radial-gradient(circle at 80% 80%, rgba(59,130,246,0.05), transparent),
-        #020617;
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.03), transparent),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.02), transparent),
+        #000000;
 
     font-family: 'Segoe UI', sans-serif;
-    color: #e2e8f0;
+    color: #e5e7eb;
     margin: 0;
 }
 
-/* subtle cyber grid */
+/* subtle grid */
 body::before {
     content: "";
     position: fixed;
@@ -23,38 +23,41 @@ body::before {
     z-index: -1;
 }
 
-/* ================= CARD (GLASS + NEON) ================= */
+/* ================= CARD (GLASS + GLOW) ================= */
 .card {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255,255,255,0.05);
     backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
 
     border-radius: 16px;
-    border: 1px solid rgba(0,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.1);
 
     padding: 18px;
     margin-bottom: 18px;
 
     box-shadow:
-        0 0 15px rgba(0,255,255,0.08),
-        inset 0 0 10px rgba(255,255,255,0.03);
+        0 8px 25px rgba(0,0,0,0.6),
+        inset 0 0 10px rgba(255,255,255,0.04);
 
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
+/* 🔥 GLOW HOVER EFFECT */
 .card:hover {
-    transform: translateY(-3px);
-    border: 1px solid rgba(0,255,255,0.4);
+    transform: translateY(-2px);
+
+    border: 1px solid rgba(255,255,255,0.25);
 
     box-shadow:
-        0 0 25px rgba(0,255,255,0.3),
-        0 0 60px rgba(59,130,246,0.15);
+        0 0 0 1px rgba(255,255,255,0.15),
+        0 0 20px rgba(255,255,255,0.15),
+        0 0 40px rgba(255,255,255,0.08),
+        inset 0 0 12px rgba(255,255,255,0.05);
 }
 
 /* ================= SECTION TITLE ================= */
 .section-title {
     font-size: 13px;
-    color: #38bdf8;
+    color: #9ca3af;
     letter-spacing: 1px;
     text-transform: uppercase;
     margin-bottom: 10px;
@@ -71,48 +74,46 @@ body::before {
     padding: 10px;
 
     border-radius: 10px;
-    border: 1px solid rgba(0,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.15);
 
-    background: rgba(0,0,0,0.4);
-    color: #e2e8f0;
+    background: rgba(255,255,255,0.05);
+    color: white;
 
     outline: none;
     transition: 0.2s;
 }
 
 .search-bar input:focus {
-    border: 1px solid #00ffff;
-    box-shadow: 0 0 10px #00ffff;
+    border: 1px solid #ffffff;
+    box-shadow: 0 0 10px rgba(255,255,255,0.4);
 }
 
-.search-bar input::placeholder {
-    color: #475569;
-}
-
-/* neon button */
+/* ================= BUTTON ================= */
 .search-bar button {
     padding: 10px 14px;
     border-radius: 10px;
     border: none;
 
-    background: linear-gradient(135deg, #00ffff, #2563eb);
+    background: linear-gradient(135deg, #ffffff, #d1d5db);
     color: black;
-    font-weight: bold;
+    font-weight: 600;
 
     cursor: pointer;
     transition: 0.2s;
 }
 
+/* 🔥 BUTTON GLOW */
 .search-bar button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 15px #00ffff;
+    box-shadow:
+        0 0 10px rgba(255,255,255,0.6),
+        0 0 25px rgba(255,255,255,0.3);
 }
 
-/* ================= FILTER BUTTONS ================= */
+/* ================= FILTER BUTTON ================= */
 button {
-    background: rgba(0,255,255,0.05);
-    border: 1px solid rgba(0,255,255,0.2);
-    color: #38bdf8;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #d1d5db;
 
     padding: 6px 12px;
     border-radius: 8px;
@@ -122,8 +123,11 @@ button {
 }
 
 button:hover {
-    background: rgba(0,255,255,0.15);
-    box-shadow: 0 0 10px rgba(0,255,255,0.5);
+    box-shadow:
+        0 0 8px rgba(255,255,255,0.4),
+        0 0 20px rgba(255,255,255,0.15);
+
+    background: rgba(255,255,255,0.12);
 }
 
 /* ================= TABLE ================= */
@@ -132,84 +136,105 @@ table {
     border-collapse: collapse;
     margin-top: 10px;
 
-    background: rgba(255,255,255,0.02);
+    background: rgba(255,255,255,0.03);
     border-radius: 12px;
     overflow: hidden;
 }
 
-/* neon header */
 th {
-    background: rgba(0,255,255,0.08);
-    color: #00ffff;
+    background: rgba(255,255,255,0.06);
+    color: #f9fafb;
     padding: 10px;
     font-weight: 500;
-    text-shadow: 0 0 6px rgba(0,255,255,0.6);
 }
 
-/* rows */
 td {
     padding: 10px;
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
-/* row hover glow */
+/* 🔥 ROW GLOW */
 tr:hover {
-    background: rgba(0,255,255,0.05);
-    box-shadow: inset 0 0 10px rgba(0,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    box-shadow: inset 0 0 10px rgba(255,255,255,0.1);
 }
 
-/* ================= RISK COLORS (NEON) ================= */
+/* ================= RISK ================= */
 .risk-high {
-    color: #ff4d4d;
-    text-shadow: 0 0 8px #ff4d4d;
+    color: #ffffff;
     font-weight: bold;
 }
 
 .risk-medium {
-    color: #facc15;
-    text-shadow: 0 0 6px #facc15;
+    color: #d1d5db;
 }
 
 .risk-low {
-    color: #4ade80;
-    text-shadow: 0 0 6px #4ade80;
+    color: #9ca3af;
 }
 
 /* ================= STATUS ================= */
 .status-anomaly {
-    color: #ff4d4d;
-    text-shadow: 0 0 10px #ff4d4d;
+    color: #ffffff;
     font-weight: bold;
 }
 
 .status-normal {
-    color: #22c55e;
+    color: #9ca3af;
 }
 
-/* ================= ACTION BADGE ================= */
+/* ================= ACTION ================= */
 .action-badge {
-    background: rgba(0,255,255,0.08);
-    border: 1px solid rgba(0,255,255,0.2);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
     padding: 4px 8px;
     border-radius: 6px;
     font-size: 12px;
-
-    box-shadow: 0 0 6px rgba(0,255,255,0.2);
 }
 
 /* ================= EMPTY ================= */
 .empty {
     text-align: center;
-    color: #475569;
+    color: #6b7280;
     padding: 20px;
 }
 
 /* ================= LINKS ================= */
 a {
-    color: #38bdf8;
+    color: #ffffff;
     text-decoration: none;
 }
 
 a:hover {
-    text-shadow: 0 0 6px #00ffff;
+    text-shadow: 0 0 6px rgba(225, 0,0,0.08);
+}
+/* ================= ANOMALY ROW ================= */
+.row-anomaly {
+    background: rgba(255, 0, 0, 0.08);
+}
+
+.row-anomaly:hover {
+    background: rgba(255, 0, 0, 0.15);
+    box-shadow: inset 0 0 12px rgba(255, 12, 0.518);
+}
+
+/* ================= VIEW BUTTON ================= */
+.view-btn {
+    display: inline-block;
+    padding: 6px 12px;
+
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ffffff, #d1d5db);
+    color: black;
+    font-size: 12px;
+    font-weight: 600;
+
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.view-btn:hover {
+    box-shadow:
+        0 0 8px rgba(255,255,255,0.6),
+        0 0 20px rgba(255,255,255,0.2);
 }
