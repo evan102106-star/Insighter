@@ -9,17 +9,23 @@
 </div>
 
 <!-- ================= SEARCH ================= -->
+<!-- ================= SEARCH ================= -->
 <div class="card">
     <div class="section-title">🔍 Search Session</div>
 
-    <form method="POST" action="/search">
+    <form onsubmit="searchSessions(event)">
         <div class="search-bar">
-            <input type="text" name="query" placeholder="Enter Session ID..." required>
+            <input type="text" id="searchInput" placeholder="Search by ID / username / anomaly">
             <button type="submit">Search</button>
         </div>
     </form>
-</div>
 
+    <!-- Quick filters -->
+    <div style="margin-top:10px;">
+        <button onclick="quickFilter('anomaly')">⚠ Only Anomalies</button>
+        <button onclick="quickFilter('')">All</button>
+    </div>
+</div>
 <!-- ================= LIVE TABLE ================= -->
 <div class="card">
     <div class="section-title">🧠 Recent Sessions (Live)</div>
@@ -47,67 +53,105 @@
 
 <!-- ================= SCRIPT ================= -->
 <script>
+
 async function loadSessions() {
     try {
         let res = await fetch("/live_stream");
         let data = await res.json();
-
-        let table = document.querySelector("#sessionTable tbody");
-        table.innerHTML = "";
-
-        if (!data || data.length === 0) {
-            table.innerHTML = `<tr><td colspan="7" class="empty">No active sessions</td></tr>`;
-            return;
-        }
-
-        // Sort by highest risk
-        data.sort((a, b) => b.risk_score - a.risk_score);
-
-        data.forEach(s => {
-            let riskClass = "risk-low";
-            if (s.risk_score >= 3) riskClass = "risk-high";
-            else if (s.risk_score == 2) riskClass = "risk-medium";
-
-            let statusClass = s.ml_label === "ANOMALY" ? "status-anomaly" : "status-normal";
-
-            let row = `
-                <tr>
-                    <td><strong>${s.session_id}</strong></td>
-                    <td>${s.login_hour}</td>
-
-                    <td class="${riskClass}">
-                        ${s.risk_score}/4
-                    </td>
-
-                    <td>
-                        ${Number(s.behavior_deviation).toFixed(2)}
-                    </td>
-
-                    <td class="${statusClass}">
-                        ${s.ml_label}
-                    </td>
-
-                    <td>
-                        <span class="action-badge">${s.action}</span>
-                    </td>
-
-                    <td>
-                        <a href="/session/${s.session_id}">View</a>
-                    </td>
-                </tr>
-            `;
-
-            table.innerHTML += row;
-        });
+        renderTable(data);
 
     } catch (err) {
         console.log("Error loading sessions:", err);
     }
 }
+async function searchSessions(e) {
+    e.preventDefault();
 
-// refresh every 5 sec
+    let query = document.getElementById("searchInput").value.trim();
+
+    // ✅ If session ID → redirect to user page
+    if (!isNaN(query) && query !== "") {
+        window.location.href = `/session/${query}`;
+        return;
+    }
+
+    // Otherwise → AJAX search
+    try {
+        let res = await fetch("/search", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `query=${encodeURIComponent(query)}`
+        });
+
+        let data = await res.json();
+        renderTable(data);
+
+    } catch (err) {
+        console.log("Search error:", err);
+    }
+}
+function quickFilter(type) {
+    document.getElementById("searchInput").value = type;
+    searchSessions(new Event("submit"));
+}
+
+function renderTable(data) {
+
+    let table = document.querySelector("#sessionTable tbody");
+    table.innerHTML = "";
+
+    if (!data || data.length === 0) {
+        table.innerHTML = `<tr><td colspan="7" class="empty">No results found</td></tr>`;
+        return;
+    }
+
+    // Sort by highest risk
+    data.sort((a, b) => b.risk_score - a.risk_score);
+
+    data.forEach(s => {
+
+        let riskClass = "risk-low";
+        if (s.risk_score >= 3) riskClass = "risk-high";
+        else if (s.risk_score == 2) riskClass = "risk-medium";
+
+        let statusClass = s.ml_label === "ANOMALY" ? "status-anomaly" : "status-normal";
+
+        let row = `
+            <tr>
+                <td><strong>${s.session_id}</strong></td>
+                <td>${s.login_hour}</td>
+
+                <td class="${riskClass}">
+                    ${s.risk_score}/4
+                </td>
+
+                <td>
+                    ${Number(s.behavior_deviation).toFixed(2)}
+                </td>
+
+                <td class="${statusClass}">
+                    ${s.ml_label}
+                </td>
+
+                <td>
+                    <span class="action-badge">${s.action}</span>
+                </td>
+
+                <td>
+                    <a href="/session/${s.session_id}">View</a>
+                </td>
+            </tr>
+        `;
+
+        table.innerHTML += row;
+    });
+}
+
+// Live auto refresh
 setInterval(loadSessions, 5000);
 loadSessions();
-</script>
 
+</script>
 {% endblock %}
